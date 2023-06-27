@@ -11,6 +11,7 @@ const btnClear = document.querySelector('.clear-btn');
 let editElement;
 let editFlag = false;
 let editID = '';
+let onList = false;
 
 // ****** EVENT LISTENERS **********
 // submit form
@@ -25,7 +26,9 @@ function addItem(e) {
   e.preventDefault();
   const value = grocery.value;
   const id = new Date().getTime().toString();
-  if (value && !editFlag) {
+  checkList(value);
+
+  if (value && !editFlag && onList == false) {
     createListItem(id, value);
     // display alert
     displayAlert('item added to the list', 'success');
@@ -34,17 +37,30 @@ function addItem(e) {
     // add to local storage
     addToLocalStorage(id, value);
     setBackToDefault();
-  } else if (value && editFlag) {
+  } else if (value && editFlag && onList == false) {
     editElement.innerHTML = value;
     displayAlert('value changed', 'success');
     // edit local storage
     editLocalStorage(editID, value);
+    setBackToDefault();
+  } else if (value && onList == true) {
+    displayAlert('item is already on the list', 'danger');
     setBackToDefault();
   } else {
     displayAlert('please enter value', 'danger');
   }
 }
 
+function checkList(value) {
+  const items = document.querySelectorAll('.grocery-item');
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].textContent.includes(value)) {
+      onList = true;
+      break;
+    }
+  }
+  console.log(items);
+}
 // delete item function
 function deleteItem(e) {
   const element = e.currentTarget.parentElement.parentElement;
@@ -56,7 +72,6 @@ function deleteItem(e) {
     container.classList.remove('show-container');
   }
   setBackToDefault();
-  console.log(id);
   removeFromLocalStorage(id);
 }
 // edit item function
@@ -77,6 +92,7 @@ function setBackToDefault() {
   editFlag = false;
   editID = '';
   btnSubmit.textContent = 'submit';
+  onList = false;
 }
 
 // clear items
