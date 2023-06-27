@@ -24,7 +24,8 @@ window.addEventListener('DOMContentLoaded', setupItems);
 // ****** FUNCTIONS **********
 function addItem(e) {
   e.preventDefault();
-  const value = grocery.value;
+  let value = grocery.value;
+  value = value.toLowerCase();
   const id = new Date().getTime().toString();
   checkList(value);
 
