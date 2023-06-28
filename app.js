@@ -25,6 +25,8 @@ window.addEventListener('DOMContentLoaded', setupItems);
 function addItem(e) {
   e.preventDefault();
   let value = grocery.value;
+  value = value.trim();
+  value = value.replace(/\s+/g, ' ');
   value = value.toLowerCase();
   const id = new Date().getTime().toString();
   checkList(value);
